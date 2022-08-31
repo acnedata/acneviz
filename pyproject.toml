@@ -1,0 +1,19 @@
+[tool.poetry]
+authors = ["Iven Winkelmann <ivenw@users.noreply.github.com>"]
+description = ""
+name = "acneviz"
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+matplotlib = "^3.5.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+black = "^22.6.0"
+mypy = "^0.971"
+notebook = "^6.4.12"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
