@@ -34,3 +34,11 @@ and saved to a file with
 ```Python
 plot.save("./figures/myplot.png")
 ```
+
+Make sure to check the docstring of a plot to find out what kind of data it expects
+and how it can be modified.
+
+Since ACNE VIZ is a thin wrapper around Plotly, the underlying `plotly.graph_object.Figure`
+can be accessed with `plot._figure`. That way we can do more advanced modifications by
+dropping down to the Plotly API. For example, we could use modify the layout with
+`plot._figure.update_layout()`. To see which settings are availble, check out [https://plotly.com/python/reference/layout/](https://plotly.com/python/reference/layout/)
