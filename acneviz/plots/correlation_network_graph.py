@@ -11,7 +11,6 @@ import plotly.graph_objects as go
 from acneviz.colors import AcneColors
 from acneviz.utils import clamp
 
-
 MAX_NODE_SIZE = 500
 MAX_EDGE_WIDTH = 100
 
