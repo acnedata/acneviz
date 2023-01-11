@@ -5,14 +5,17 @@ name = "acneviz"
 version = "0.1.0"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-matplotlib = "^3.5.3"
+python = "^3.9"
+plotly = "^5.11.0"
+networkx = "^3.0"
+pandas = "^1.5.2"
+seaborn = "^0.12.2"
+matplotlib = "^3.6.2"
+numpy = "^1.24.1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
+notebook = "^6.5.2"
 pytest = "^7.1.2"
-black = "^22.6.0"
-mypy = "^0.971"
-notebook = "^6.4.12"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
