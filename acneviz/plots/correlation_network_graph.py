@@ -1,31 +1,77 @@
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable, cast
+from statistics import mean
+from typing import cast
+
 import networkx as nx
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.colors as pl_colors
-from statistics import mean
-
-import numpy as np
-from ast import literal_eval
 
 from acneviz.colors import AcneColors
+from acneviz.utils import clamp
+
+
+MAX_NODE_SIZE = 500
+MAX_EDGE_WIDTH = 100
 
 
 class CorrelationNetworkGraph:
+    """Creater a network graph plot from a correlation matric.
+
+    Require Parameters
+    ------------------
+    correlation_matrix : pd.DataFrame
+        A correlation matrix with the same index and columns.
+
+    Optional Keyword Parameters
+    ---------------------------
+    size : int
+        The size of the plot in pixels, by default 1080
+    color : str
+        The color of the edges, by default AcneColors.dark_sea_green
+    background_color : str
+        The background color of the plot, by default "white"
+    label_color : str
+        The color of the node labels, by default "black"
+    label_size : int
+        The size of the node labels, by default 20
+    node_size_factor : int | float
+        The factor to scale the node size by, by default 1.0
+    edge_width_factor : int | float
+        The factor to scale the edge width by, by default 1.0
+    opacity_factor : int | float
+        The factor to scale the edge opacity by, by default 1.0
+
+    Methods
+    -------
+    show()
+        Show the plot, for use in a Jupyter notebook.
+    save(path: Path | str)
+        Save the plot to a file.
+    """
+
     def __init__(
         self,
         correlation_matrix: pd.DataFrame,
         *,
+        size: int = 1080,
         color: str = AcneColors.dark_sea_green,
         background_color: str = "white",
         label_color: str = "black",
         label_size: int = 20,
+        node_size_factor: int | float = 1.0,
+        edge_width_factor: int | float = 1.0,
+        opacity_factor: int | float = 1.0,
     ) -> None:
+        self.size = size
         self.color = color
         self.background_color = background_color
         self.label_color = label_color
         self.label_size = label_size
+        self.node_size_factor = node_size_factor
+        self.edge_width_factor = edge_width_factor
+        self.opacity_factor = opacity_factor
 
         self._graph = _build_graph_from_correlation_matrix(correlation_matrix)
         self._figure = self._plot()
@@ -34,7 +80,7 @@ class CorrelationNetworkGraph:
         self._figure.show()
 
     def save(self, path: Path | str) -> None:
-        pass
+        self._figure.write_image(path, scale=2)
 
     def _plot(self) -> go.Figure:
         # Get node x,y positions
@@ -51,8 +97,8 @@ class CorrelationNetworkGraph:
 
         plot = go.Figure(data=list(edge_traces) + list(node_traces), layout=layout)
         plot.update_layout(
-            width=800,
-            height=800,
+            width=self.size,
+            height=self.size,
             template="plotly_white",
             plot_bgcolor=self.background_color,
             paper_bgcolor=self.background_color,
@@ -73,9 +119,9 @@ class CorrelationNetworkGraph:
                 x=[x0, x1],
                 y=[y0, y1],
                 mode="lines",
-                line_width=abs(correlation) * 100,
+                line_width=abs(correlation) * MAX_EDGE_WIDTH * self.edge_width_factor,
                 line_color=self.color,
-                opacity=abs(correlation),
+                opacity=clamp(abs(correlation) * self.opacity_factor, 0, 1),
             )
 
     def _node_traces(self) -> Iterable[go.Scatter]:
@@ -91,7 +137,7 @@ class CorrelationNetworkGraph:
                 y=[node_y],
                 mode="markers+text",
                 marker=dict(
-                    size=avg_correlation * 500,
+                    size=avg_correlation * MAX_NODE_SIZE * self.node_size_factor,
                     opacity=1,
                     line_width=5,
                     color=self.background_color,
@@ -117,8 +163,8 @@ def _validate_correlation_matrix(correlation_matrix: pd.DataFrame) -> None:
     if not np.allclose(correlation_matrix.values.diagonal(), 1):
         raise ValueError("Correlation matrix must have 1 on the diagonal")
 
-    if not np.allclose(np.abs(correlation_matrix.values), correlation_matrix.values):
-        raise ValueError("Correlation matrix must be absolute")
+    if not correlation_matrix.index.equals(correlation_matrix.columns):
+        raise ValueError("Correlation matrix must have same index and columns")
 
 
 def _build_graph_from_correlation_matrix(correlation_matrix: pd.DataFrame) -> nx.Graph:
@@ -153,30 +199,3 @@ def _avg_edge_weight_of_node(graph: nx.Graph, node: str) -> float:
         abs(edge_data["weight"])  # type: ignore
         for _, _, edge_data in graph.edges(node, data=True)  # type: ignore
     )
-
-
-# def get_color_for_val(val, vmin, vmax, pl_colors):
-
-#     if pl_colors[0][:3] != "rgb":
-#         raise ValueError("This function works only with Plotly rgb-colorscales")
-#     if vmin >= vmax:
-#         raise ValueError("vmin should be < vmax")
-
-#     scale = [k / (len(pl_colors) - 1) for k in range(len(pl_colors))]
-
-#     colors_01 = (
-#         np.array([literal_eval(color[3:]) for color in pl_colors]) / 255.0
-#     )  # color codes in [0,1]
-
-#     v = (val - vmin) / (vmax - vmin)  # val is mapped to v in [0,1]
-#     # find two consecutive values in plotly_scale such that   v is in  the corresponding interval
-#     idx = 1
-
-#     while v > scale[idx]:
-#         idx += 1
-#     vv = (v - scale[idx - 1]) / (scale[idx] - scale[idx - 1])
-
-#     # get   [0,1]-valued color code representing the rgb color corresponding to val
-#     val_color01 = colors_01[idx - 1] + vv * (colors_01[idx] - colors_01[idx - 1])
-#     val_color_0255 = (255 * val_color01 + 0.5).astype(int)
-#     return f"rgb{str(tuple(val_color_0255))}"

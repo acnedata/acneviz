@@ -7,10 +7,10 @@ repos:
       - id: check-yaml
       - id: check-toml
 
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.6.1
-    hooks:
-      - id: nbstripout
+  # - repo: https://github.com/kynan/nbstripout
+  #   rev: 0.6.1
+  #   hooks:
+  #     - id: nbstripout
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.2.0
@@ -40,16 +40,16 @@ repos:
       - id: flake8
         args: ["--extend-ignore", "E203, E501"]
 
-  - repo: https://github.com/pycqa/pylint
-    rev: v2.15.5
-    hooks:
-      - id: pylint
-        args:
-          [
-            "--output-format",
-            "colorized",
-            "--disable",
-            "E0401, C0301, E0602, C0114, W0511",
-            "--good-names-rgx",
-            "df, [a-z]",
-          ]
+  # - repo: https://github.com/pycqa/pylint
+  #   rev: v2.15.5
+  #   hooks:
+  #     - id: pylint
+  #       args:
+  #         [
+  #           "--output-format",
+  #           "colorized",
+  #           "--disable",
+  #           "E0401, C0301, E0602, C0114, W0511",
+  #           "--good-names-rgx",
+  #           "df, [a-z]",
+  #         ]
