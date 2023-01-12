@@ -6,7 +6,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from acneviz.colors import AcneColors
+from acneviz.colors import AcneColors, DarkMode, LightMode
 from acneviz.utils import validate_png
 
 
@@ -39,16 +39,8 @@ class Radar:
         The interval between the grid lines, by default 1
     color_palette : list[str] | None
         The color palette to use, defaults to AcneColors.discrete_palette
-    background_color : str
-        The background color of the plot, by default "white"
-    grid_color : str
-        The color of the grid lines, by default "#ddd"
-    label_color : str
-        The color of the labels, by default "black"
     label_size : int
         The size of the labels, by default 30
-    tick_color : str
-        The color of the tick labels, by default "grey"
     tick_size : int
         The size of the tick labels, by default 24
     height : int
@@ -58,9 +50,10 @@ class Radar:
         respect to the height
     legend_title : str | None
         The title of the legend. If "None", the id column name is used
+    darkmode : bool
+        Whether to use dark mode, by default False
     """
 
-    # TODO too many arguments, do we need all of these?
     def __init__(
         self,
         data: pd.DataFrame,
@@ -72,15 +65,12 @@ class Radar:
         max_value: int | float | None = None,
         grid_interval: int | float = 1,
         color_palette: list[str] = AcneColors.discrete_palette,
-        background_color: str = "white",
-        grid_color: str = "#ddd",
-        label_color: str = "black",
         label_size: int = 30,
-        tick_color: str = "grey",
         tick_size: int = 24,
         height: int = 1080,
         width: int | None = None,
         legend_title: str | None = None,
+        darkmode: bool = False,
     ) -> None:
         self._data = data.copy()
         self._variable_column = variable_column
@@ -101,15 +91,23 @@ class Radar:
         else:
             self.width = height / 3 * 4
 
-        self.background_color = background_color
-        self.grid_color = grid_color
-        self.label_color = label_color
+        if darkmode:
+            mode = DarkMode
+        else:
+            mode = LightMode
+
+        self.background_color = mode.background_color
+        self.grid_color = mode.grid_color
+        self.label_color = mode.text_color
+        self.tick_color = mode.annotation_color
+
+        self.color_palette = color_palette
         self.label_size = label_size
-        self.tick_color = tick_color
         self.tick_size = tick_size
         self.height = height
         self.legend_title = legend_title
-        self.color_palette = color_palette
+        self.gridwith = 2
+        self.griddash = "dot"
 
         self._figure = self._plot()
 
@@ -152,21 +150,31 @@ class Radar:
             figure.update_layout(legend_title_text=self.legend_title)
 
         figure.update_layout(
+            plot_bgcolor=self.background_color,
             paper_bgcolor=self.background_color,
             legend_font_size=self.label_size * 0.9,
+            legend_font_color=self.label_color,
         )
         figure.update_polars(
+            angularaxis_griddash=self.griddash,
+            angularaxis_gridwidth=self.gridwith,
             angularaxis_gridcolor=self.grid_color,
             angularaxis_tickfont_color=self.label_color,
             angularaxis_tickfont_size=self.label_size,
+            angularaxis_showline=False,
+            radialaxis_griddash=self.griddash,
+            radialaxis_gridwidth=self.gridwith,
             radialaxis_gridcolor=self.grid_color,
             radialaxis_tickfont_color=self.tick_color,
             radialaxis_tickfont_size=self.tick_size,
             radialaxis_tick0=self.min_value,
             radialaxis_dtick=self.grid_interval,
             radialaxis_ticklabelstep=self.max_value,
+            radialaxis_showline=False,
             bgcolor=self.background_color,
         )
+
+        figure.update_traces(line_width=4)
 
         return figure
 

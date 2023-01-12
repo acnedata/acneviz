@@ -27,3 +27,19 @@ class AcneColors:
             cls.spanish_blue,
             cls.orchid_pink,
         ]
+
+
+@dataclass(frozen=True)
+class LightMode:
+    background_color: str = "white"
+    text_color: str = "#222"
+    annotation_color: str = "#aaa"
+    grid_color: str = "#e0e0e0"
+
+
+@dataclass(frozen=True)
+class DarkMode:
+    background_color: str = "black"
+    text_color: str = "#ddd"
+    annotation_color: str = "#999"
+    grid_color: str = "#191919"

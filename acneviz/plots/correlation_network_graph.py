@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-from acneviz.colors import AcneColors
+from acneviz.colors import AcneColors, DarkMode, LightMode
 from acneviz.utils import clamp, validate_png
 
 MAX_NODE_SIZE = 500
@@ -34,10 +34,6 @@ class CorrelationNetworkGraph:
         The size of the plot in pixels, by default 1080
     color : str
         The color of the edges, by default AcneColors.dark_sea_green
-    background_color : str
-        The background color of the plot, by default "white"
-    label_color : str
-        The color of the node labels, by default "black"
     label_size : int
         The size of the node labels, by default 20
     node_size_factor : int | float
@@ -46,6 +42,8 @@ class CorrelationNetworkGraph:
         The factor to scale the edge width by, by default 1.0
     opacity_factor : int | float
         The factor to scale the edge opacity by, by default 1.0
+    dark_mode : bool
+        Whether to use dark mode, by default False
 
     Methods
     -------
@@ -61,21 +59,26 @@ class CorrelationNetworkGraph:
         *,
         size: int = 1080,
         color: str = AcneColors.dark_sea_green,
-        background_color: str = "white",
-        label_color: str = "black",
         label_size: int = 20,
         node_size_factor: int | float = 1.0,
         edge_width_factor: int | float = 1.0,
         opacity_factor: int | float = 1.0,
+        dark_mode: bool = False,
     ) -> None:
         self.size = size
         self.color = color
-        self.background_color = background_color
-        self.label_color = label_color
         self.label_size = label_size
         self.node_size_factor = node_size_factor
         self.edge_width_factor = edge_width_factor
         self.opacity_factor = opacity_factor
+
+        if dark_mode:
+            mode = DarkMode
+        else:
+            mode = LightMode
+
+        self.background_color = mode.background_color
+        self.label_color = mode.text_color
 
         self._graph = _build_graph_from_correlation_matrix(correlation_matrix)
         self._figure = self._plot()
