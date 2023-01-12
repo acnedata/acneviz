@@ -60,6 +60,7 @@ class Radar:
         The title of the legend. If "None", the id column name is used
     """
 
+    # TODO too many arguments, do we need all of these?
     def __init__(
         self,
         data: pd.DataFrame,
