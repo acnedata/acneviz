@@ -39,9 +39,20 @@ Showing and saving the plot can also be achieved as a one-liner without assignin
 plot to a variable like so:
 ```Python
 Plot().show().save("myplot.png")
+```
 
 Make sure to check the docstring of a plot to find out what kind of data it expects
 and how it can be modified.
+
+### Theming
+
+ACNE VIZ comes with two color schemes. Light mode and dark mode on white and black
+background, respectively. Light mode is default; to activate dark mode do:
+```Python
+Plot(darkmode=True)
+```
+
+### Advanced
 
 Since ACNE VIZ is a thin wrapper around Plotly, the underlying `plotly.graph_object.Figure`
 can be accessed with:
