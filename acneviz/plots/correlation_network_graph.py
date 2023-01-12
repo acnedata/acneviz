@@ -84,14 +84,20 @@ class CorrelationNetworkGraph:
         self._figure.show()
         return self
 
-    def save(self, path: Path | str, *, trasparent_background: bool = False) -> None:
+    def save(
+        self,
+        path: Path | str,
+        *,
+        trasparent_background: bool = False,
+        scale: int | float = 2,
+    ) -> None:
         """Save the plot to a file. Accepts only .png as file extension."""
         if trasparent_background:
             self._figure.update_layout(
                 plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)"
             )
 
-        self._figure.write_image(validate_png(path), scale=2)
+        self._figure.write_image(validate_png(path), scale=scale)
 
         if trasparent_background:
             self._figure.update_layout(

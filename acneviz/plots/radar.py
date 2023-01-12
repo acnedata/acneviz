@@ -117,13 +117,19 @@ class Radar:
         self._figure.show()
         return self
 
-    def save(self, path: Path | str, *, transparent_background: bool = False) -> None:
+    def save(
+        self,
+        path: Path | str,
+        *,
+        transparent_background: bool = False,
+        scale: int | float = 2,
+    ) -> None:
         """Save the plot to a file. Accepts only .png as file extension."""
         if transparent_background:
             self._figure.update_layout(paper_bgcolor="rgba(0,0,0,0)")
             self._figure.update_layout(plot_bgcolor="rgba(0,0,0,0)")
 
-        self._figure.write_image(validate_png(path), scale=2)
+        self._figure.write_image(validate_png(path), scale=scale)
 
         if transparent_background:
             self._figure.update_layout(paper_bgcolor=self.background_color)
