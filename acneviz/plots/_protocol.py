@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
-from plotly.graph_objects import Figure
+
 from pandas import DataFrame
+from plotly.graph_objects import Figure
 
 
 @runtime_checkable
