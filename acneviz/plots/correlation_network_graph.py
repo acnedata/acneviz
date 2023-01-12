@@ -78,8 +78,18 @@ class CorrelationNetworkGraph:
     def show(self) -> None:
         self._figure.show()
 
-    def save(self, path: Path | str) -> None:
+    def save(self, path: Path | str, trasparent_background: bool = False) -> None:
+        if trasparent_background:
+            self._figure.update_layout(
+                plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)"
+            )
+
         self._figure.write_image(path, scale=2)
+
+        if trasparent_background:
+            self._figure.update_layout(
+                plot_bgcolor=self.background_color, paper_bgcolor=self.background_color
+            )
 
     def _plot(self) -> go.Figure:
         # Get node x,y positions
