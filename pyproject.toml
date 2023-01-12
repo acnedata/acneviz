@@ -9,8 +9,6 @@ python = "^3.9"
 plotly = "^5.11.0"
 networkx = "^3.0"
 pandas = "^1.5.2"
-seaborn = "^0.12.2"
-matplotlib = "^3.6.2"
 numpy = "^1.24.1"
 kaleido = "0.2.1"
 
