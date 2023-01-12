@@ -1,7 +1,26 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+
 def clamp(
     num: int | float, min_value: int | float, max_value: int | float
 ) -> int | float:
     return max(min(num, max_value), min_value)
+
+
+def is_png(path: Path | str) -> bool:
+    if isinstance(path, Path):
+        return path.suffix == ".png"
+
+    return path.endswith(".png")
+
+
+def validate_png(path: Path | str) -> Path | str:
+    if not is_png(path):
+        raise ValueError("Path point to a .png file.")
+
+    return path
 
 
 # def get_color_for_val(val, vmin, vmax, pl_colors):

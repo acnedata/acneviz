@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from collections.abc import Iterable
 from pathlib import Path
 from statistics import mean
@@ -9,7 +11,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from acneviz.colors import AcneColors
-from acneviz.utils import clamp
+from acneviz.utils import clamp, validate_png
 
 MAX_NODE_SIZE = 500
 MAX_EDGE_WIDTH = 100
@@ -17,6 +19,9 @@ MAX_EDGE_WIDTH = 100
 
 class CorrelationNetworkGraph:
     """Creater a network graph plot from a correlation matric.
+
+    Accepted color values are any valid CSS color formated as a string, e.g. "red", "#ff0000",
+    "rgb(255, 0, 0)", "rgb(1, 0, 0)", "rgba(1, 0, 0, 0.5).
 
     Require Parameters
     ------------------
@@ -75,16 +80,18 @@ class CorrelationNetworkGraph:
         self._graph = _build_graph_from_correlation_matrix(correlation_matrix)
         self._figure = self._plot()
 
-    def show(self) -> None:
+    def show(self) -> CorrelationNetworkGraph:
         self._figure.show()
+        return self
 
-    def save(self, path: Path | str, trasparent_background: bool = False) -> None:
+    def save(self, path: Path | str, *, trasparent_background: bool = False) -> None:
+        """Save the plot to a file. Accepts only .png as file extension."""
         if trasparent_background:
             self._figure.update_layout(
                 plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)"
             )
 
-        self._figure.write_image(path, scale=2)
+        self._figure.write_image(validate_png(path), scale=2)
 
         if trasparent_background:
             self._figure.update_layout(

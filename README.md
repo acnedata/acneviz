@@ -32,8 +32,13 @@ plot.show()
 
 and saved to a file with:
 ```Python
-plot.save("./figures/myplot.png")
+plot.save("myplot.png")
 ```
+
+Showing and saving the plot can also be achieved as a one-liner without assigning the
+plot to a variable like so:
+```Python
+Plot().show().save("myplot.png")
 
 Make sure to check the docstring of a plot to find out what kind of data it expects
 and how it can be modified.
