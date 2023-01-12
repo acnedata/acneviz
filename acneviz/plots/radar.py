@@ -24,7 +24,9 @@ class Radar:
         to the id of each observation can be provided, e.g. the cluster id)
 
     Optional Keyword Parameters
-    ---------------------------
+    ---------
+    darkmode : bool
+        Whether to use dark mode, by default False
     id_column : str | None
         The name of the column corresponding to the id of each observation, by default None
     variable_column : str
@@ -49,15 +51,21 @@ class Radar:
         The width of the plot in pixels. If 'None', defaults to width of a 4:3 aspect ratio in
         respect to the height
     legend_title : str | None
-        The title of the legend. If "None", the id column name is used
-    darkmode : bool
-        Whether to use dark mode, by default False
+        The title of the legend. If "None", the id column name is used by default
+
+    Methods
+    -------
+    show()
+        Displays the plot in a Jupyter notebook
+    save(path: str, scale: int | float)
+        Saves the plot as a png file
     """
 
     def __init__(
         self,
         data: pd.DataFrame,
         *,
+        darkmode: bool = False,
         id_column: str | None = None,
         variable_column: str,
         value_column: str,
@@ -70,7 +78,6 @@ class Radar:
         height: int = 1080,
         width: int | None = None,
         legend_title: str | None = None,
-        darkmode: bool = False,
     ) -> None:
         self._data = data.copy()
         self._variable_column = variable_column
@@ -177,42 +184,3 @@ class Radar:
         figure.update_traces(line_width=4)
 
         return figure
-
-
-def radar_chart(data: pd.DataFrame, palette: list[str], color: str) -> go.Figure:
-    fig = px.line_polar(
-        data,
-        r="value",
-        theta="variable",
-        color=color,
-        line_close=True,
-        width=640,
-        height=448,
-        template="plotly_white",
-        range_r=[1, 7],
-        color_discrete_sequence=palette,
-    )
-
-    fig.update_polars(
-        angularaxis_tickfont_family="Helvetica Neue",
-        radialaxis_tickfont_family="Helvetica Neue",
-        angularaxis_tickfont_size=16,
-        radialaxis_tickfont_size=14,
-        radialaxis_tickfont_color="#aaa",
-        radialaxis_tickmode="array",
-        radialaxis_tickvals=[1, 2, 3, 4, 5, 6, 7],
-        radialaxis_ticktext=["1"] + [""] * 5 + ["7"],
-        bgcolor="rgba(0,0,0,0)",
-    )
-
-    # change line width
-    fig.update_traces(line_width=4)
-
-    # remmove legend
-    fig.update_layout(
-        showlegend=False,
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-    )
-
-    return fig

@@ -30,6 +30,8 @@ class CorrelationNetworkGraph:
 
     Optional Keyword Parameters
     ---------------------------
+    darkmode : bool
+        Whether to use dark mode, by default False
     size : int
         The size of the plot in pixels, by default 1080
     color : str
@@ -42,8 +44,6 @@ class CorrelationNetworkGraph:
         The factor to scale the edge width by, by default 1.0
     opacity_factor : int | float
         The factor to scale the edge opacity by, by default 1.0
-    dark_mode : bool
-        Whether to use dark mode, by default False
 
     Methods
     -------
@@ -55,15 +55,15 @@ class CorrelationNetworkGraph:
 
     def __init__(
         self,
-        correlation_matrix: pd.DataFrame,
+        data: pd.DataFrame,
         *,
+        dark_mode: bool = False,
         size: int = 1080,
         color: str = AcneColors.dark_sea_green,
         label_size: int = 20,
         node_size_factor: int | float = 1.0,
         edge_width_factor: int | float = 1.0,
         opacity_factor: int | float = 1.0,
-        dark_mode: bool = False,
     ) -> None:
         self.size = size
         self.color = color
@@ -80,7 +80,7 @@ class CorrelationNetworkGraph:
         self.background_color = mode.background_color
         self.label_color = mode.text_color
 
-        self._graph = _build_graph_from_correlation_matrix(correlation_matrix)
+        self._graph = _build_graph_from_correlation_matrix(data)
         self._figure = self._plot()
 
     def show(self) -> CorrelationNetworkGraph:
