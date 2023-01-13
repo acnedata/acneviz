@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from pathlib import Path
 from statistics import mean
 from typing import cast
 
@@ -11,13 +10,14 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from acneviz.colors import AcneColors, DarkMode, LightMode
-from acneviz.utils import clamp, validate_png
+from acneviz.plots._protocol import Plot
+from acneviz.utils import clamp
 
 MAX_NODE_SIZE = 500
 MAX_EDGE_WIDTH = 100
 
 
-class CorrelationNetworkGraph:
+class CorrelationNetworkGraph(Plot):
     """Creater a network graph plot from a correlation matric.
 
     Accepted color values are any valid CSS color formated as a string, e.g. "red", "#ff0000",
@@ -77,35 +77,12 @@ class CorrelationNetworkGraph:
         else:
             mode = LightMode
 
-        self.background_color = mode.background_color
-        self.label_color = mode.text_color
+        self._background_color = mode.background_color
+        self._label_color = mode.text_color
 
-        self._graph = _build_graph_from_correlation_matrix(data)
+        self._data = data
+        self._graph = _build_graph_from_correlation_matrix(self._data)
         self._figure = self._plot()
-
-    def show(self) -> CorrelationNetworkGraph:
-        self._figure.show()
-        return self
-
-    def save(
-        self,
-        path: Path | str,
-        *,
-        trasparent_background: bool = False,
-        scale: int | float = 2,
-    ) -> None:
-        """Save the plot to a file. Accepts only .png as file extension."""
-        if trasparent_background:
-            self._figure.update_layout(
-                plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)"
-            )
-
-        self._figure.write_image(validate_png(path), scale=scale)
-
-        if trasparent_background:
-            self._figure.update_layout(
-                plot_bgcolor=self.background_color, paper_bgcolor=self.background_color
-            )
 
     def _plot(self) -> go.Figure:
         # Get node x,y positions
@@ -125,8 +102,8 @@ class CorrelationNetworkGraph:
             width=self.size,
             height=self.size,
             template="plotly_white",
-            plot_bgcolor=self.background_color,
-            paper_bgcolor=self.background_color,
+            plot_bgcolor=self._background_color,
+            paper_bgcolor=self._background_color,
             margin=dict(l=0, r=0, t=0, b=0),
         )
 
@@ -165,11 +142,11 @@ class CorrelationNetworkGraph:
                     size=avg_correlation * MAX_NODE_SIZE * self.node_size_factor,
                     opacity=1,
                     line_width=5,
-                    color=self.background_color,
+                    color=self._background_color,
                     line_color=self.color,
                 ),
                 text=node,
-                textfont=dict(size=self.label_size, color=self.label_color),
+                textfont=dict(size=self.label_size, color=self._label_color),
                 textposition="middle center",
             )
 
