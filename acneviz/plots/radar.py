@@ -96,10 +96,7 @@ class Radar(Plot):
         else:
             self.width = height / 3 * 4
 
-        if darkmode:
-            mode = DarkMode
-        else:
-            mode = LightMode
+        mode = DarkMode if darkmode else LightMode
 
         self._background_color = mode.background_color
         self._grid_color = mode.grid_color

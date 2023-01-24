@@ -72,10 +72,7 @@ class CorrelationNetworkGraph(Plot):
         self.edge_width_factor = edge_width_factor
         self.opacity_factor = opacity_factor
 
-        if dark_mode:
-            mode = DarkMode
-        else:
-            mode = LightMode
+        mode = DarkMode if dark_mode else LightMode
 
         self._background_color = mode.background_color
         self._label_color = mode.text_color
