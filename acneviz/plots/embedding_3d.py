@@ -1,19 +1,19 @@
 from __future__ import annotations
-import math
+
 import io
-
+import math
 from pathlib import Path
-from joblib import Parallel, delayed
 
-import plotly.graph_objects as go
-import plotly.express as px
-import pandas as pd
 import numpy as np
-from tqdm import tqdm
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from joblib import Parallel, delayed
 from PIL import Image
-from acneviz.colors import DarkMode, LightMode, AcneColors
-from acneviz.plots._protocol import Plot
+from tqdm import tqdm
 
+from acneviz.colors import AcneColors, DarkMode, LightMode
+from acneviz.plots._protocol import Plot
 
 AXIS_EXPANSION_FACTOR = 0.2
 
