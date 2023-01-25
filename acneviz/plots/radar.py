@@ -14,7 +14,7 @@ class Radar(Plot):
     Accepted color values are any valid CSS color formated as a string, e.g. "red", "#ff0000",
     "rgb(255, 0, 0)", "rgb(1, 0, 0)", "rgba(1, 0, 0, 0.5).
 
-    Require Parameters
+    Required Parameters
     ------------------
     data : pd.DataFrame
         A dataframe in long format with a column corresponding to the variables and a

@@ -19,6 +19,34 @@ AXIS_EXPANSION_FACTOR = 0.2
 
 
 class Embedding3D(Plot):
+    """Creates a 3D scatter plot from a dataframe.
+
+    Required Parameters
+    -------------------
+    data: pd.DataFrame
+        The dataframe containing the data to be plotted.
+    x_column: str
+        The name of the column containing the x-axis data.
+    y_column: str
+        The name of the column containing the y-axis data.
+    z_column: str
+        The name of the column containing the z-axis data.
+    id_column: str | None
+        The name of the column containing the data to be used for coloring the points.
+        If None, the points will be colored uniformly.
+    size_column: str | None
+        The name of the column containing the data to be used for sizing the points.
+        If None, the points will be sized uniformly.
+    label_size: int
+        The size of the labels on the legend.
+    color_palette: list[str]
+        The color palette to be used for coloring the points.
+    dark_mode: bool
+        Whether to use a dark mode for the plot.
+    legend_title: str | None
+        The title of the legend. If None, no title will be used.
+    """
+
     def __init__(
         self,
         data: pd.DataFrame,
@@ -91,51 +119,17 @@ class Embedding3D(Plot):
         )
 
     def _plot(self) -> go.Figure:
-        if self._id:
-            figure = px.scatter_3d(
-                self._data,
-                x=self._x,
-                y=self._y,
-                z=self._z,
-                color=self._id,
-                color_discrete_sequence=self._color_palette,
-                width=1600,
-                height=1200,
-            )
-        elif self._size:
-            figure = px.scatter_3d(
-                self._data,
-                x=self._x,
-                y=self._y,
-                z=self._z,
-                size=self._size,
-                color_discrete_sequence=self._color_palette,
-                width=1600,
-                height=1200,
-            )
-        elif self._id and self._size:
-            figure = px.scatter_3d(
-                self._data,
-                x=self._x,
-                y=self._y,
-                z=self._z,
-                color=self._id,
-                size=self._size,
-                color_discrete_sequence=self._color_palette,
-                width=1600,
-                height=1200,
-            )
-        else:
-            figure = px.scatter_3d(
-                self._data,
-                x=self._x,
-                y=self._y,
-                z=self._z,
-                color=self._id,
-                color_discrete_sequence=self._color_palette,
-                width=1600,
-                height=1200,
-            )
+        figure = px.scatter_3d(
+            self._data,
+            x=self._x,
+            y=self._y,
+            z=self._z,
+            color=self._id,
+            size=self._size,
+            color_discrete_sequence=self._color_palette,
+            width=1600,
+            height=1200,
+        )
 
         x_min, x_max = self._data[self._x].min(), self._data[self._x].max()
         y_min, y_max = self._data[self._y].min(), self._data[self._y].max()
