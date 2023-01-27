@@ -6,18 +6,17 @@ version = "0.1.0"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-plotly = "^5.11.0"
+plotly = "^5.10"
 networkx = "^3.0"
-pandas = "^1.5.2"
-numpy = "^1.24.1"
-kaleido = "0.2.1"
-tqdm = "^4.64.1"
-Pillow = "^9.4.0"
-joblib = "^1.2.0"
+pandas = "^1.4"
+kaleido = "0.2"
+tqdm = "^4.64"
+Pillow = "^9.4"
+joblib = "^1.2"
 
 [tool.poetry.group.dev.dependencies]
-notebook = "^6.5.2"
-pytest = "^7.1.2"
+notebook = "^6.5"
+pytest = "^7.1"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
